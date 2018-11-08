@@ -10,4 +10,4 @@ python app.py
 
 ## Implementation
 
-This project is implemented using FLask, and is a REST API for a store.
+This project is implemented using FLask, Flask-RESTful, Flask-JWT, and Flask-SQLAlchemy and is a REST API for a store.
