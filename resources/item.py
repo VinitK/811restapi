@@ -21,7 +21,7 @@ class Item(Resource):
     def post(self, name): #post method
 
         if ItemModel.find_by_name(name):
-            return {"message": f"Item with name {name} already exists."}, 400
+            return {"message": "Item with name {} already exists.".format(name)}, 400
         
         data = Item.parser.parse_args()
         
