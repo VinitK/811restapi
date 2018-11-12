@@ -65,4 +65,4 @@ class ItemList(Resource):
 
     @jwt_required()
     def get(self): # get method
-        return {"items":list(map(lambda x: x.json(), ItemModel.query.all()))}
+        return {"items":[item.json() for item in ItemModel.find_all()]}
