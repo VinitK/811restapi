@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask_jwt import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from models.item import ItemModel
 
@@ -9,7 +9,7 @@ class Item(Resource):
     parser.add_argument("price", type=float, required=True, help="This field can't be left blank.")
     parser.add_argument("store_id", type=int, required=True, help="Every id needs a store id.")
 
-    @jwt_required()
+    @jwt_required
     def get(self, name): #get method
         
         item = ItemModel.find_by_name(name)
@@ -17,7 +17,7 @@ class Item(Resource):
             return item.json(), 200
         return {"message": "Item not found"}, 404
 
-    @jwt_required()
+    @jwt_required
     def post(self, name): #post method
 
         if ItemModel.find_by_name(name):
@@ -34,7 +34,7 @@ class Item(Resource):
 
         return item.json(), 201
 
-    @jwt_required()
+    @jwt_required
     def put(self, name): # put method
 
         data = Item.parser.parse_args()
@@ -51,8 +51,12 @@ class Item(Resource):
 
         return item.json()
 
-    @jwt_required()
+    @jwt_required
     def delete(self, name): # delete method
+        
+        claims = get_jwt_claims()
+        if not claims['is_admin']:
+            return {"message":"Admin Privilage Required."}, 401
 
         item = ItemModel.find_by_name(name)
         if item:
@@ -63,6 +67,6 @@ class Item(Resource):
 
 class ItemList(Resource):
 
-    @jwt_required()
+    @jwt_required
     def get(self): # get method
         return {"items":[item.json() for item in ItemModel.find_all()]}
